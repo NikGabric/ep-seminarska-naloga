@@ -5,8 +5,8 @@ class DBInit
 
     private static $host = "localhost";
     private static $user = "root";
-    private static $password = "ep";
-    private static $schema = "bookstore";
+    private static $password = "root";
+    private static $schema = "ep_store";
     private static $instance = null;
 
     private function __construct()
@@ -35,6 +35,7 @@ class DBInit
                 PDO::ATTR_PERSISTENT => true,
                 PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
             );
+            echo "<script>console.log('Debug Objects: " . $config . "' );</script>";
 
             self::$instance = new PDO($config, self::$user, self::$password, $options);
         }

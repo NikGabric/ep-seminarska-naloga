@@ -1,6 +1,7 @@
 <?php
 
 require_once 'model/AbstractDB.php';
+require_once 'model/DB.php';
 
 class CubeDB extends AbstractDB
 {
@@ -28,6 +29,14 @@ class CubeDB extends AbstractDB
         $cubes = parent::query("SELECT id, cube_name, manufacturer, cube_type, price"
             . " FROM rubiks_cube"
             . " WHERE id = :id", $id);
+
+        return $cubes;
+    }
+
+    public static function getCubeName(array $id)
+    {
+
+        return self::get($id)[0]["cube_name"];
     }
 
     public static function getAll()
@@ -35,5 +44,18 @@ class CubeDB extends AbstractDB
         return parent::query("SELECT id, cube_name, manufacturer, cube_type, price"
             . " FROM rubiks_cube"
             . " ORDER BY id ASC");
+    }
+
+    public static function getForIds($ids)
+    {
+        $db = DBInit::getInstance();
+
+        $id_placeholders = implode(",", array_fill(0, count($ids), "?"));
+
+        $statement = $db->prepare("SELECT id, cube_name, manufacturer, cube_type, price FROM rubiks_cube 
+            WHERE id IN (" . $id_placeholders . ")");
+        $statement->execute($ids);
+
+        return $statement->fetchAll();
     }
 }

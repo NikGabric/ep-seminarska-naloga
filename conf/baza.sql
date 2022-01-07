@@ -12,10 +12,12 @@ CREATE TABLE `user` (
   `surname` varchar(30) NOT NULL,
   `address` varchar(30),
   `email` varchar(80) NOT NULL,
-  `password` varchar(30) NOT NULL,
-  `role` varchar(8) NOT NULL, /* `admin`, `salesman`, `customer`, `anon` */
+  `password` varchar(64) NOT NULL,
+  `role` varchar(8) NOT NULL, /* `admin`, `seller`, `customer` */
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_slovenian_ci;
+
+DROP TABLE IF EXISTS `rubiks_cube`;
 
 CREATE TABLE `rubiks_cube` (
   `id` int(8) NOT NULL AUTO_INCREMENT,
@@ -32,18 +34,16 @@ CREATE TABLE `rubiks_cube` (
 
 LOCK TABLES `user` WRITE;
 INSERT INTO `user` VALUES 
-(1, 'pivofrajer', 'Ivan','Pajo', NULL, 'P.Ivan@sds.si', 'jj_overlord', 'admin'),
-(2, 'john', 'John', 'Doe', NULL, 'j.dough@c9.com', '00000000', 'salesman'),
-(3, 'mihi bele 123', 'Mihi', 'Bele', 'Narnija 69', 'mihi.bele.123@lolpro.com', 'mid_or_AFK', 'customer');
+(1, 'admin1', 'Ivan','Pajo', NULL, 'admin1@test.si', 'adminpass', 'admin'),
+(2, 'seller1', 'John', 'Doe', NULL, 'seller1@test.si', 'sellerpass', 'seller'),
+(3, 'customer1', 'Mihi', 'Bele', 'Narnija 69', 'customer1@test.si', 'customerpass', 'customer');
 UNLOCK TABLES;
 
 LOCK TABLES `rubiks_cube` WRITE;
 INSERT INTO `rubiks_cube` VALUES 
-(1, '11 pro-M', 'Gan','3x3', 16),
-(2, 'RS3M', 'MoYu','3x3', 12),
-(3, 'Weilong WR M 2021', 'Moyu','3x3', 15),
-(4, 'MGC 4x4 Magnetic', 'YJ','4x4', 22),
-(5, 'MS 4x4', 'QiYi','4x4', 20);
+(1, 'Rubiks 3x3', 'Rubiks','3x3', 12),
+(2, 'Rubiks 4x4', 'Rubiks','4x4', 16),
+(3, 'Rubiks 5x5', 'Rubiks','5x5', 20);
 UNLOCK TABLES;
 
 -- Dump completed on 2014-12-12 16:45:04

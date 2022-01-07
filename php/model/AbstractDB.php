@@ -95,7 +95,7 @@ abstract class AbstractDB
      * @param array $params Parametri poizvedbe
      * @return type array Rezulat poizvedbe
      */
-    protected static function query($sql, array $params = array())
+    public static function query($sql, array $params = [])
     {
         $stmt = self::getConnection()->prepare($sql);
         $params_filtered = self::filterParams($sql, $params);
