@@ -19,7 +19,8 @@
             <p>[
                 <span><a href="<?= BASE_URL . "account/" . $_SESSION["user_id"] ?>"><?= $_SESSION["username"] ?></a></span> |
                 <span><a href="<?= BASE_URL . "logout" ?>">Logout</a></span> |
-                <span><a href="<?= BASE_URL . "store/finishedOrders" ?>">View finished orders</a></span>
+                <span><a href="<?= BASE_URL . "store/finishedOrders" ?>">View finished orders</a></span> |
+                <span><a href="<?= BASE_URL . "store/addItem" ?>">Add new item</a></span>
                 ]
             </p>
         <?php } else if ($_SESSION["role"] == "customer") { ?>
@@ -53,7 +54,7 @@
                     <span>Account role:</span>
                     <select name="role" onchange="hideAddress(this.value)">
                         <option value="seller" selected>Seller</option>
-                        <option value="admin">Admin</option>
+                        <!-- <option value="admin">Admin</option> -->
                         <option value="customer">Customer</option>
                     </select>
                 </p>

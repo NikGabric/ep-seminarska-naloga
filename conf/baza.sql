@@ -56,9 +56,11 @@ CREATE TABLE `order_detail` (
 
 LOCK TABLES `user` WRITE;
 INSERT INTO `user` VALUES 
-(1, 'admin1', 'Ivan','Pajo', NULL, 'admin1@test.si', 'adminpass', 'admin', 'active'),
-(2, 'seller1', 'John', 'Doe', NULL, 'seller1@test.si', 'sellerpass', 'seller', 'active'),
-(3, 'customer1', 'Mihi', 'Bele', 'Narnija 69', 'customer1@test.si', 'customerpass', 'customer', 'active');
+('4', 'admin', 'admin', 'admin', '', 'admin@test.si', '$2y$10$38DwIObCkfk6m5QJVGhN0O1AtdCWR8tUYCGBxH0pIol550Nxm8YdO', 'admin', 'active'),
+('5', 'seller1', 'seller1', 'seller1', '', 'seller1@test.si', '$2y$10$O9Cu6SlsZXtTS4gydVIYfuqAOuxQACspUSyx4IljCVO76JoffcuGi', 'seller', 'active'),
+('6', 'seller2', 'seller2', 'seller2', '', 'seller2@test.si', '$2y$10$7kkYsVzkFVgxrmh4ke0egewxcq38yKLTNah5VvB8DCz0VLgrA5Mqm', 'seller', 'active'),
+('7', 'customer1', 'customer1', 'customer1', 'Narnija', 'customer1@test.si', '$2y$10$TVFQWxwrne2g1fi6is/KQOzgB9mveOqlkCkMRAY6XtK4s0sl4llUS', 'customer', 'active'),
+('8', 'customer2', 'customer2', 'customer2', 'Hogwarts', 'customer2@test.si', '$2y$10$MyogYCf.MyW20PslqiYh9.hJx9l0zsJSumIZPPtYD.vh0XuRbyBP6', 'customer', 'active');
 UNLOCK TABLES;
 
 LOCK TABLES `rubiks_cube` WRITE;

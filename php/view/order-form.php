@@ -4,13 +4,13 @@
 <head>
     <link rel="stylesheet" type="text/css" href="<?= CSS_URL . "style.css" ?>">
     <meta charset="UTF-8" />
-    <title>Cube store</title>
+    <title>Order</title>
 </head>
 
 <body>
     <p><a href="<?= BASE_URL . "store" ?>">Home</a></p>
 
-    <h1>Cube store</h1>
+    <h1>Order</h1>
 
     <?php
     if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
@@ -18,7 +18,8 @@
             <p>[
                 <span><a href="<?= BASE_URL . "account/" . $_SESSION["user_id"] ?>"><?= $_SESSION["username"] ?></a></span> |
                 <span><a href="<?= BASE_URL . "logout" ?>">Logout</a></span> |
-                <span><a href="<?= BASE_URL . "store/finishedOrders" ?>">View finished orders</a></span>
+                <span><a href="<?= BASE_URL . "store/finishedOrders" ?>">View finished orders</a></span> |
+                <span><a href="<?= BASE_URL . "store/addItem" ?>">Add new item</a></span>
                 ]
             </p>
         <?php } else if ($_SESSION["role"] == "customer") { ?>

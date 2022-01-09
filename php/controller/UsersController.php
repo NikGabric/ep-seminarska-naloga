@@ -118,7 +118,7 @@ class UsersController
         }
 
         if (isset($data["username"]) && $data["username"] != "") {
-            $data["id"] = $_SESSION["id"];
+            $data["user_id"] = $_SESSION["id"];
             $status = UserDB::updateUsername($data);
 
             if ($status == -1) {

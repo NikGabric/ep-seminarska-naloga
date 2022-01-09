@@ -106,4 +106,43 @@ class StoreController
             "orders" => OrderDB::getAll()
         ]);
     }
+
+    public static function addItemForm()
+    {
+        echo ViewHelper::render("view/add-item.php", []);
+    }
+    public static function addItem()
+    {
+        $rules = [
+            'cube_name' => FILTER_SANITIZE_SPECIAL_CHARS,
+            'manufacturer' => FILTER_SANITIZE_SPECIAL_CHARS,
+            'cube_type' => FILTER_SANITIZE_SPECIAL_CHARS,
+            'price' => FILTER_SANITIZE_SPECIAL_CHARS,
+        ];
+        $data = filter_input_array(INPUT_POST, $rules);
+
+        if (self::checkValues($data)) {
+            CubeDB::insert($data);
+            echo ViewHelper::render("view/cube-list.php", [
+                "cubes" => CubeDB::getAll()
+            ]);
+        } else {
+            print("Fill all fields!");
+            self::addItemForm();
+        }
+    }
+
+    private static function checkValues($input)
+    {
+        if (empty($input)) {
+            return FALSE;
+        }
+
+        $result = TRUE;
+        foreach ($input as $value) {
+            $result = $result && $value != false;
+        }
+
+        return $result;
+    }
 }

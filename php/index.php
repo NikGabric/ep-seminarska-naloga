@@ -92,6 +92,13 @@ $urls = [
             StoreController::finishedOrdersForm();
         }
     },
+    "/^store\/addItem$/" => function ($method) {
+        if ($method == "POST") {
+            StoreController::addItem();
+        } else {
+            StoreController::addItemForm();
+        }
+    },
     "/^store\/purgeCart$/" => function ($method) {
         StoreController::purgeCart();
     },
@@ -120,7 +127,7 @@ $urls = [
 foreach ($urls as $pattern => $controller) {
     if (preg_match($pattern, $path, $params)) {
         try {
-            $params[0] = $_SERVER["REQUEST_METHOD"];
+            $params[0] = filter_input(INPUT_SERVER, 'REQUEST_METHOD');
             $controller(...$params);
         } catch (InvalidArgumentException $e) {
             ViewHelper::error404();
