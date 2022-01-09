@@ -1,0 +1,10 @@
+{
+	"status": "active",
+	"role": "admin",
+	"name": "admin",
+	"surname": "admin",
+	"address": "",
+	"email": "admin@test.si",
+	"username": "admin",
+	"password": "admin"
+}

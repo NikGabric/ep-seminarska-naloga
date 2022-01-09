@@ -9,7 +9,7 @@ class CubesController
     public static function index()
     {
         $rules = [
-            "id" => [
+            "cube_id" => [
                 'filter' => FILTER_VALIDATE_INT,
                 'options' => ['min_range' => 1]
             ]

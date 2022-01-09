@@ -7,39 +7,39 @@ class UserDB extends AbstractDB
 
     public static function insert(array $params)
     {
-        return parent::modify("INSERT INTO user (`username`, `name`, `surname`, `address`, `email`, `password`, `role`) "
-            . " VALUES (:username, :name, :surname, :address, :email, :password, :role)", $params);
+        return parent::modify("INSERT INTO user (`username`, `name`, `surname`, `address`, `email`, `password`, `role`, `status`) "
+            . " VALUES (:username, :name, :surname, :address, :email, :password, :role, :status)", $params);
     }
 
     public static function update(array $params)
     {
         return parent::modify("UPDATE user SET username = :username"
             . "cube_type = :cube_type, price = :price"
-            . " WHERE id = :id", $params);
+            . " WHERE user_id = :user_id", $params);
     }
 
-    public static function delete(array $id)
+    public static function delete(array $user_id)
     {
-        return parent::modify("DELETE FROM rubiks_cube WHERE id = :id", $id);
+        return parent::modify("DELETE FROM rubiks_cube WHERE user_id = :user_id", $user_id);
     }
 
-    public static function get(array $id)
+    public static function get(array $user_id)
     {
-        $cubes = parent::query("SELECT id, cube_name, manufacturer, cube_type, price"
+        $cubes = parent::query("SELECT user_id, cube_name, manufacturer, cube_type, price"
             . " FROM rubiks_cube"
-            . " WHERE id = :id", $id);
+            . " WHERE user_id = :user_id", $user_id);
     }
 
     public static function getAll()
     {
-        return parent::query("SELECT `id`, `username`, `name`, `surname`, `address`, `email`, `password`, `role`"
+        return parent::query("SELECT `user_id`, `username`, `name`, `surname`, `address`, `email`, `password`, `role`"
             . " FROM user"
-            . " ORDER BY id ASC");
+            . " ORDER BY user_id ASC");
     }
 
     public static function checkUsername($params)
     {
-        return parent::query("SELECT `id`, `username`, `password`, `role`"
+        return parent::query("SELECT `user_id`, `username`, `password`, `role`, `status`"
             . " FROM user"
             . " WHERE `username` = :username", $params);
     }
@@ -54,7 +54,7 @@ class UserDB extends AbstractDB
 
             $dbUser = self::checkUsername($params);
             $_SESSION["loggedin"] = true;
-            $_SESSION["id"] = $dbUser[0]["id"];
+            $_SESSION["user_id"] = $dbUser[0]["user_id"];
             $_SESSION["role"] = $dbUser[0]["role"];
             $_SESSION["username"] = $dbUser[0]["username"];
             $_SESSION["total"] = 0;
@@ -68,18 +68,24 @@ class UserDB extends AbstractDB
     public static function login(array $params)
     {
         $dbUser = self::checkUsername($params);
-        if (!empty($dbUser)) {
+        $commonname = openssl_x509_parse(filter_input(INPUT_SERVER, "SSL_CLIENT_CERT"))["subject"]["CN"];
+
+        if (empty($dbUser)) {
+            return -1;
+        } else if ($dbUser[0]["role"] == "admin" && $commonname != "admin") {
+            return -4;
+        } else if ($dbUser[0]["status"] == "disabled") {
+            return -3;
+        } else {
             if (password_verify($params["password"], $dbUser[0]["password"])) {
                 $_SESSION["loggedin"] = true;
-                $_SESSION["id"] = $dbUser[0]["id"];
+                $_SESSION["user_id"] = $dbUser[0]["user_id"];
                 $_SESSION["role"] = $dbUser[0]["role"];
                 $_SESSION["username"] = $dbUser[0]["username"];
                 $_SESSION["total"] = 0;
             } else {
                 return -2;
             }
-        } else {
-            return -1;
         }
     }
 
@@ -97,7 +103,7 @@ class UserDB extends AbstractDB
     public static function updateUsernameHelper(array $params)
     {
         return parent::modify("UPDATE user SET username = :username"
-            . " WHERE id = :id", $params);
+            . " WHERE user_id = :user_id", $params);
     }
 
     public static function updatePassword(array $params)
@@ -110,6 +116,34 @@ class UserDB extends AbstractDB
     public static function updatePasswordHelper(array $params)
     {
         return parent::modify("UPDATE user SET `password` = :password"
-            . " WHERE id = :id", $params);
+            . " WHERE user_id = :user_id", $params);
+    }
+
+    public static function getSellers()
+    {
+        return parent::query("SELECT `user_id`, `username`, `role`, `status`"
+            . " FROM user"
+            . " WHERE role = 'seller'");
+    }
+
+    public static function updateAccountStatus($params)
+    {
+        return parent::modify("UPDATE user SET `status` = :status"
+            . " WHERE user_id = :user_id", $params);
+    }
+
+    public static function createNewUser(array $params)
+    {
+        if (empty(self::checkUsername($params))) {
+            $param_password = password_hash($params["password"], PASSWORD_DEFAULT);
+
+            $params["password"] = $param_password;
+            self::insert($params);
+
+            return 0;
+        } else {
+            print("Username already exists!");
+            return -1;
+        }
     }
 }

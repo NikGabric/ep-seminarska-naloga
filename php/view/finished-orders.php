@@ -1,17 +1,16 @@
 <!DOCTYPE html>
+<html>
 
 <head>
     <link rel="stylesheet" type="text/css" href="<?= CSS_URL . "style.css" ?>">
     <meta charset="UTF-8" />
-    <title>Register</title>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    <title>Cube store</title>
 </head>
 
 <body>
     <p><a href="<?= BASE_URL . "store" ?>">Home</a></p>
 
-    <h1>Register</h1>
+    <h1>Finished orders</h1>
 
     <?php
     if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
@@ -45,38 +44,35 @@
         </p>
     <?php } ?>
 
-    <div id="main">
-        <div class="register-box">
-            <form action="<?= BASE_URL . "register" ?>" method="post">
-                <input type="hidden" name="status" value="active" />
-                <p>
-                    <span>Account role:</span>
-                    <select name="role" onchange="hideAddress(this.value)">
-                        <option value="seller" selected>Seller</option>
-                        <option value="admin">Admin</option>
-                        <option value="customer">Customer</option>
-                    </select>
-                </p>
-                <p><span>Name: </span><input type="name" name="name" autofocus /></p>
-                <p><span>Surname: </span><input type="name" name="surname" /></p>
-                <p id="address" hidden><span>Address: </span><input type="text" name="address" value="" /></p>
-                <p><span>Email: </span><input type="email" name="email" value="<?= $email ?>" /></p>
-                <p><span>Username: </span><input type="username" name="username" value="<?= $username ?>" /></p>
-                <p><span>Password: </span><input type="password" name="password" value="<?= $password ?>" /></p>
-                <p><span>Password: </span><input type="password" name="password" /></p>
-                <p><button>Register</button></p>
+    <div id="order-main">
+        <?php foreach ($orders as $orderId => $orderDetails) : ?>
+            <form action="<?= BASE_URL . "store/finishedOrders" ?>" method="post">
+                <input type="hidden" name="order_id" value="<?= $orderId ?>" />
+                <div class="order" style="text-align: center;">
+                    <p><b>Order ID: <?= $orderId ?></b></p>
+                    <div>
+                        <?php foreach ($orderDetails[$orderId] as $temp => $product) : ?>
+                            <div class="cut-text"><?= $product["product_quantity"] ?> x <?= CubeDB::getCubeName(["cube_id" => $product["product_id"]]); ?></div>
+                        <?php endforeach; ?>
+                        <div style="text-align: center;">Order status: <u><?= $orderDetails["order_status"] ?></u></div>
+                        <div style="text-align: center;">Order total: <b><?= $orderDetails["order_total"] ?> EUR</b></div>
+                    </div>
+                    <p>
+                        <span>Update status:</span>
+                        <select name="order_status">
+                            <option value="pending" selected>Pending</option>
+                            <option value="confirmed">Confirm</option>
+                            <option value="cancelled">Cancel</option>
+                            <option value="reversed">Reverse</option>
+                        </select>
+                    </p>
+                    <p><button>Update</button></p>
+                </div>
             </form>
-        </div>
     </div>
+
+<?php endforeach; ?>
+</div>
 </body>
 
-<script>
-    function hideAddress(option) {
-        console.log(option);
-        if (option == "customer") {
-            $('#address').show()
-        } else {
-            $('#address').hide()
-        }
-    }
-</script>
+</html>

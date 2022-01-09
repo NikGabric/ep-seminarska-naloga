@@ -16,7 +16,7 @@ class Cart
         $cart = CubeDB::getForIds($ids);
 
         foreach ($cart as &$cube) {
-            $cube["quantity"] = $_SESSION["cart"][$cube["id"]];
+            $cube["quantity"] = $_SESSION["cart"][$cube["cube_id"]];
         }
 
         return $cart;
@@ -24,7 +24,7 @@ class Cart
 
     public static function add($id)
     {
-        $cube = CubeDB::get(["id" => $id]);
+        $cube = CubeDB::get(["cube_id" => $id]);
 
         if ($cube != null) {
             if (isset($_SESSION["cart"][$id])) {
@@ -37,7 +37,7 @@ class Cart
 
     public static function update($id, $quantity)
     {
-        $cube = CubeDB::get(["id" => $id]);
+        $cube = CubeDB::get(["cube_id" => $id]);
         $quantity = intval($quantity);
 
         if ($cube != null) {

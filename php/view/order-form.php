@@ -1,17 +1,16 @@
 <!DOCTYPE html>
+<html>
 
 <head>
     <link rel="stylesheet" type="text/css" href="<?= CSS_URL . "style.css" ?>">
     <meta charset="UTF-8" />
-    <title>Register</title>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    <title>Cube store</title>
 </head>
 
 <body>
     <p><a href="<?= BASE_URL . "store" ?>">Home</a></p>
 
-    <h1>Register</h1>
+    <h1>Cube store</h1>
 
     <?php
     if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
@@ -45,38 +44,19 @@
         </p>
     <?php } ?>
 
-    <div id="main">
-        <div class="register-box">
-            <form action="<?= BASE_URL . "register" ?>" method="post">
-                <input type="hidden" name="status" value="active" />
-                <p>
-                    <span>Account role:</span>
-                    <select name="role" onchange="hideAddress(this.value)">
-                        <option value="seller" selected>Seller</option>
-                        <option value="admin">Admin</option>
-                        <option value="customer">Customer</option>
-                    </select>
-                </p>
-                <p><span>Name: </span><input type="name" name="name" autofocus /></p>
-                <p><span>Surname: </span><input type="name" name="surname" /></p>
-                <p id="address" hidden><span>Address: </span><input type="text" name="address" value="" /></p>
-                <p><span>Email: </span><input type="email" name="email" value="<?= $email ?>" /></p>
-                <p><span>Username: </span><input type="username" name="username" value="<?= $username ?>" /></p>
-                <p><span>Password: </span><input type="password" name="password" value="<?= $password ?>" /></p>
-                <p><span>Password: </span><input type="password" name="password" /></p>
-                <p><button>Register</button></p>
-            </form>
-        </div>
+    <div class="order">
+        <?php foreach ($_SESSION["cart"] as $id => $quantity) : $cube = CubeDB::get(["cube_id" => $id])[0]  ?>
+            <p><?= $quantity ?> x <?= $cube["cube_name"] ?> - <?= number_format($cube["price"] * $quantity, 2) ?> EUR</p>
+        <?php endforeach; ?>
+    </div>
+    <div>
+        <div>Total: <b><?= number_format(Cart::total(), 2) ?> EUR</b></div>
+    </div>
+    <div>
+        <form action="<?= BASE_URL . "store/finishOrder" ?>" method="post">
+            <button type="submit">Finish order</button>
+        </form>
     </div>
 </body>
 
-<script>
-    function hideAddress(option) {
-        console.log(option);
-        if (option == "customer") {
-            $('#address').show()
-        } else {
-            $('#address').hide()
-        }
-    }
-</script>
+</html>

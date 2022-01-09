@@ -29,6 +29,7 @@ class UsersController
             'email' => FILTER_SANITIZE_SPECIAL_CHARS,
             'username' => FILTER_SANITIZE_SPECIAL_CHARS,
             'password' => FILTER_SANITIZE_SPECIAL_CHARS,
+            'status' => FILTER_SANITIZE_SPECIAL_CHARS,
         ];
         $data = filter_input_array(INPUT_POST, $rules);
 
@@ -45,9 +46,6 @@ class UsersController
         } else {
             print("Fill all fields!");
             self::registerForm();
-            // echo ViewHelper::render("view/cube-list.php", [
-            //     "cubes" => CubeDB::getAll()
-            // ]);
         }
     }
 
@@ -61,7 +59,6 @@ class UsersController
 
     public static function login()
     {
-
         $rules = [
             'username' => FILTER_SANITIZE_SPECIAL_CHARS,
             'password' => FILTER_SANITIZE_SPECIAL_CHARS,
@@ -71,11 +68,17 @@ class UsersController
 
         if (self::checkValues($data)) {
             $id = UserDB::login($data);
-            if ($id == -2) {
+            if ($id == -3) {
+                print("User disabled!");
+                self::loginForm();
+            } else if ($id == -2) {
                 print("Wrong password!");
                 self::loginForm();
             } else if ($id == -1) {
                 print("Wrong username!");
+                self::loginForm();
+            } else if ($id == -4) {
+                print("X.509 certificate for admin user needed!");
                 self::loginForm();
             } else {
                 echo ViewHelper::render("view/cube-list.php", [
@@ -87,6 +90,14 @@ class UsersController
                 "cubes" => CubeDB::getAll()
             ]);
         }
+    }
+
+    public static function logout()
+    {
+        session_unset();
+        echo ViewHelper::render("view/cube-list.php", [
+            "cubes" => CubeDB::getAll()
+        ]);
     }
 
     public static function accountDashboard()
@@ -143,6 +154,62 @@ class UsersController
         } else {
             print("Password can't be empty!");
             echo ViewHelper::render("view/account-dashboard.php", []);
+        }
+    }
+
+    public static function customerOrdersForm($id)
+    {
+        echo ViewHelper::render("view/customer-orders.php", [
+            "orders" => OrderDB::getForCustomerId(["customer_id" => $_SESSION["user_id"]])
+        ]);
+    }
+
+    public static function adminPanelForm()
+    {
+        echo ViewHelper::render("view/admin-panel.php", [
+            "sellers" => UserDB::getSellers(),
+        ]);
+    }
+
+    public static function accountUpdateStatus()
+    {
+        $rules = [
+            'user_id' => FILTER_SANITIZE_SPECIAL_CHARS,
+            'username' => FILTER_SANITIZE_SPECIAL_CHARS,
+            'status' => FILTER_SANITIZE_SPECIAL_CHARS,
+        ];
+        $data = filter_input_array(INPUT_POST, $rules);
+
+        UserDB::updateAccountStatus($data);
+
+        self::adminPanelForm();
+    }
+
+    public static function createNewUser()
+    {
+        $rules = [
+            'role' => FILTER_SANITIZE_SPECIAL_CHARS,
+            'name' => FILTER_SANITIZE_SPECIAL_CHARS,
+            'surname' => FILTER_SANITIZE_SPECIAL_CHARS,
+            'address' => FILTER_SANITIZE_SPECIAL_CHARS,
+            'email' => FILTER_SANITIZE_SPECIAL_CHARS,
+            'username' => FILTER_SANITIZE_SPECIAL_CHARS,
+            'password' => FILTER_SANITIZE_SPECIAL_CHARS,
+            'status' => FILTER_SANITIZE_SPECIAL_CHARS,
+        ];
+        $data = filter_input_array(INPUT_POST, $rules);
+
+        if (self::checkValues($data)) {
+            $id = UserDB::createNewUser($data);
+            if ($id == -1) {
+                print("Username taken!");
+                self::adminPanelForm();
+            } else {
+                self::adminPanelForm();
+            }
+        } else {
+            print("Fill all fields!");
+            self::adminPanelForm();
         }
     }
 
