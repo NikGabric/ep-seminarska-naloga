@@ -118,7 +118,8 @@ class UsersController
         }
 
         if (isset($data["username"]) && $data["username"] != "") {
-            $data["user_id"] = $_SESSION["id"];
+            $data["user_id"] = $_SESSION["user_id"];
+            var_dump($data);
             $status = UserDB::updateUsername($data);
 
             if ($status == -1) {
@@ -142,7 +143,7 @@ class UsersController
         $data = filter_input_array(INPUT_POST, $rules);
 
         if (isset($data["password"]) && $data["password"] != "") {
-            $data["id"] = $_SESSION["id"];
+            $data["user_id"] = $_SESSION["user_id"];
             $status = UserDB::updatePassword($data);
 
             if ($status == -1) {
