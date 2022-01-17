@@ -35,7 +35,7 @@ class DBInit
                 PDO::ATTR_PERSISTENT => true,
                 PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
             );
-            echo "<script>console.log('Debug Objects: " . $config . "' );</script>";
+            // echo "<script>console.log('Debug Objects: " . $config . "' );</script>";
 
             self::$instance = new PDO($config, self::$user, self::$password, $options);
         }

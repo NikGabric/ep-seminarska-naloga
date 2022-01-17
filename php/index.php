@@ -113,6 +113,10 @@ $urls = [
         switch ($method) {
             case "GET":
                 CubesRESTController::index();
+                break;
+            case "POST":
+                CubesRESTController::add();
+                break;
         }
     },
     // https://localhost/ep/php/api/cubes
@@ -120,6 +124,13 @@ $urls = [
         switch ($method) {
             case "GET":
                 CubesRESTController::get($id);
+                break;
+            case "DELETE":
+                CubesRESTController::delete($id);
+                break;
+            case "POST":
+                CubesRESTController::edit($id);
+                break;
         }
     }
 ];

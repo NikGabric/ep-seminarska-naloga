@@ -115,7 +115,7 @@ class CubesController
     //  * @param type $input
     //  * @return type
     //  */
-    private static function checkValues($input)
+    public static function checkValues($input)
     {
         if (empty($input)) {
             return FALSE;
@@ -133,20 +133,13 @@ class CubesController
     //  * Returns an array of filtering rules for manipulation books
     //  * @return type
     //  */
-    // private static function getRules() {
-    //     return [
-    //         'title' => FILTER_SANITIZE_SPECIAL_CHARS,
-    //         'author' => FILTER_SANITIZE_SPECIAL_CHARS,
-    //         'description' => FILTER_SANITIZE_SPECIAL_CHARS,
-    //         'price' => FILTER_VALIDATE_FLOAT,
-    //         'year' => [
-    //             'filter' => FILTER_VALIDATE_INT,
-    //             'options' => [
-    //                 'min_range' => 1800,
-    //                 'max_range' => date("Y")
-    //             ]
-    //         ]
-    //     ];
-    // }
-
+    public static function getRules()
+    {
+        return [
+            'cube_name' => FILTER_SANITIZE_SPECIAL_CHARS,
+            'manufacturer' => FILTER_SANITIZE_SPECIAL_CHARS,
+            'cube_type' => FILTER_SANITIZE_SPECIAL_CHARS,
+            'price' => FILTER_VALIDATE_FLOAT,
+        ];
+    }
 }
